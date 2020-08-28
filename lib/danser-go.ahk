@@ -8,7 +8,9 @@ class DANSER { ;                          Only a few parameters are required. us
         } else {
             this.danserpath := A_ScriptDir . path . " "
         }
-        this.danserdir := StrReplace(this.danserpath, "\danser.exe", "") 
+        exename := InStr(this.danserpath, "\",, 0)
+        dansername := SubStr(this.danserpath, exename + 1)
+        this.danserdir := StrReplace(this.danserpath, dansername, "") 
     }
     artist(artist) { ;                   Set the artist to search for
         this.artist := "-a=""" . artist . """ "
@@ -56,17 +58,21 @@ class DANSER { ;                          Only a few parameters are required. us
     debug() { ;                         Enable debug info(only needs to be called)
         this.debug := "-debug"
     }
+    play() { ;                          Enable experimental play mode(YOU NEED TO PLAY)
+        this.play := "-play "
+    }
     run() { ;                           Starts the osu!dancer made by wieku(github.com)
         if !(this.danserpath || this.danserpath = "") {
-            throw "No danser path specified!"
-        } else {
-            if (this.diff == "") {
-                throw "No Difficulty specified!"
-            } else {
-                SetWorkingDir % this.danserdir
-                command := this.danserpath . this.artist . this.title . this.diff . this.creator . this.cursors . this.tag . this.speed . this.pitchvalue . this.mover . this.fps . this.debug
-                run % command
-            }
+            throw "No danser path specified! Program will exit"
+            Exitapp
+        }
+        if (this.diff == "") {
+            throw "No Difficulty specified! Program will exit"
+            Exitapp
+        }
+        SetWorkingDir % this.danserdir
+        command := this.danserpath . this.artist . this.title . this.diff . this.creator . this.cursors . this.tag . this.speed . this.pitchvalue . this.mover . this.fps . this.play . this.debug
+        run % command
         }
     }
 }
